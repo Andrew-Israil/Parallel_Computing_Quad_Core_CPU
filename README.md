@@ -88,8 +88,12 @@ You will not need to make use of any other std::thread API calls in this assignm
 
   Analysis Results:
 
-  The graph below shows the speedup as a function of the threads number for view 1 and view 2 using the Spatial Decomposition. It can be seen that the curve for view 1 is not linear due to the drop occuring when using three thread. The argument  is that in view 1, most of the pixels woth heavy operations lie in middle of the image while the majority of the rest are black pixels. Since this sector of the image is mostly handled by the second thread, the other two finish earlier and wait for the remaining thread to join.   
   ![Speedup graph](handout-images/speedup_graph.jpg)
+
+  The above below shows the speedup as a function of the threads number for view 1 and view 2 using the Spatial Decomposition. It can be seen that the curve for view 1 is not linear due to the drop occuring when using three thread. The argument  is that in view 1, most of the pixels woth heavy operations lie in middle of the image while the majority of the rest are black pixels. Since this sector of the image is mostly handled by the second thread, the other two finish earlier and wait for the remaining thread to join. This can be shown in the figure below.
+
+![three Threads Drop](handout-images/3_threads_drop.jpg)
+
 
 4.  Modify the mapping of work to threads to achieve to improve speedup to
   at __about 7-8x on both views__ of the Mandelbrot set (if you're above 7x that's fine, don't sweat it). You may not use any
@@ -97,7 +101,13 @@ You will not need to make use of any other std::thread API calls in this assignm
   assignment that will achieve this goal, and no communication/synchronization
   among threads is necessary.). In your writeup, describe your approach to parallelization
   and report the final 8-thread speedup obtained. 
+
+  Solution:
+  Distribute the worklaod accross the image sectors over all threads by assigning every nth group of rows to a thread as shown the program. The size of the group at each thread iteration was determined experimentally, also the  total  number of rows assigned to a thread must be divisible by the group size. This approach results in 7.1 for view 1 and 6.89 for view 2.
+
 5. Now run your improved code with 16 threads. Is performance noticably greater than when running with eight threads? Why or why not? 
+
+Answer: This had no effect on improving the performance since the CPU can only run 8 threads concurrently, thus the remainig 8 are schedueled later by the OS and dispatched through context switch which takes thousands of clock cycles.
   
 ## Program 2: Vectorizing Code Using SIMD Intrinsics (20 points) ##
 

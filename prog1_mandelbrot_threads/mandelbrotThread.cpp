@@ -49,7 +49,7 @@ void workerThreadStart(WorkerArgs * const args) {
     // int threadRows = args->height / args->numThreads;
     // int restRows = args->height % args->numThreads;
     // int rowPerIter;
-    // for(int i = 1; threadRows % i == 0 && i <= 3; ++i){
+    // for(int i = 1; threadRows % i == 0 && i <= 1; ++i){
     //     rowPerIter = i;
     // }
     // if(args->threadId < restRows)
