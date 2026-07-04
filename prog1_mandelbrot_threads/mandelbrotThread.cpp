@@ -35,7 +35,33 @@ void workerThreadStart(WorkerArgs * const args) {
     // program that uses two threads, thread 0 could compute the top
     // half of the image and thread 1 could compute the bottom half.
 
-    printf("Hello world from thread %d\n", args->threadId);
+    // Spacial Decomposition:
+    int threadRows = args->height / args->numThreads;
+    int startRow = args->threadId * threadRows;
+    if(args->threadId == args->numThreads -1){
+        threadRows = args->height - startRow;
+    }
+    double startTime = CycleTimer::currentSeconds();
+    mandelbrotSerial(args->x0, args->y0, args->x1, args->y1, args->width, args->height,
+                    startRow, threadRows, args->maxIterations, args->output);
+    double endTime = CycleTimer::currentSeconds();
+
+    // int threadRows = args->height / args->numThreads;
+    // int restRows = args->height % args->numThreads;
+    // int rowPerIter;
+    // for(int i = 1; threadRows % i == 0 && i <= 3; ++i){
+    //     rowPerIter = i;
+    // }
+    // if(args->threadId < restRows)
+    //     threadRows += 1;
+    
+    // double startTime = CycleTimer::currentSeconds();
+    // for(int i = 0, startRow = args->threadId * rowPerIter; i < threadRows; i += rowPerIter, startRow += (args->numThreads * rowPerIter)){
+    //     mandelbrotSerial(args->x0, args->y0, args->x1, args->y1, args->width, args->height,
+    //                 startRow, rowPerIter, args->maxIterations, args->output);
+    // }
+    // double endTime = CycleTimer::currentSeconds();
+    printf("Thread %d took %.3f ms\n", args->threadId, (endTime - startTime) * 1000);
 }
 
 //

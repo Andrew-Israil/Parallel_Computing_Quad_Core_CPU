@@ -1,9 +1,5 @@
 # Assignment 1: Performance Analysis on a Quad-Core CPU #
 
-**Due Mon Oct 6, 11:59pm**
-
-**100 points total + 6 points extra credit**
-
 ## Overview ##
 
 This assignment is intended to help you develop an understanding of the two primary forms of parallel execution present in a modern multi-core CPU:
@@ -17,17 +13,6 @@ use throughout this class). This assignment involves only a small amount of
 programming, but a lot of analysis!
 
 ## Environment Setup ##
-
-__You will need to run code on the new myth machines for this assignment__
-(Hostnames for these machines are `myth[51-66].stanford.edu`). If for some reason you do not have a home directory on the myth machines, submit a HelpSU ticket [here](https://stanford.service-now.com/it_services?id=sc_cat_item&sys_id=cab169801bd918d0685d4377cc4bcbe0).
-
-These machines contain four-core 4.2 GHz Intel Core i7 processors (although dynamic frequency scaling can take them to 4.5 GHz when the chip decides it is useful and possible to do so). Each core in the processor supports __two hardware threads__ (Intel calls this "Hyper-Threading") and the cores can execute AVX2 vector instructions which describe
-simultaneous execution of the same __eight-wide SIMD operation__ on a vector of eight single-precision 
-values. For the curious, a complete specification for this CPU can be found at 
-<https://www.intel.com/content/www/us/en/products/sku/97129/intel-core-i77700k-processor-8m-cache-up-to-4-50-ghz/specifications.html>. Students that want to dig deeper might enjoy [this writeup](https://en.wikichip.org/wiki/intel/microarchitectures/kaby_lake).
-
-Note: For grading purposes, we expect you to report on the performance of code run on the Stanford myth machines, however
-for kicks, you may also want to run the programs in this assignment on your own machine. (You will first need to install the Intel SPMD Program Compiler (ISPC) available here: <http://ispc.github.io/>). Feel free to include your findings from running code on other machines in your report as well, just be very clear what machine you were running on. 
 
 To get started:
 
@@ -100,6 +85,9 @@ You will not need to make use of any other std::thread API calls in this assignm
   each thread requires to complete its work by inserting timing code at
   the beginning and end of `workerThreadStart()`. How do your measurements
   explain the speedup graph you previously created?
+
+  Analysis Results:
+  handout-images/speedup.jpg
 4.  Modify the mapping of work to threads to achieve to improve speedup to
   at __about 7-8x on both views__ of the Mandelbrot set (if you're above 7x that's fine, don't sweat it). You may not use any
   synchronization between threads in your solution. We are expecting you to come up with a single work decomposition policy that will work well for all thread counts---hard coding a solution specific to each configuration is not allowed! (Hint: There is a very simple static
