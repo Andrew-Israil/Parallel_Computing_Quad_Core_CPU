@@ -89,7 +89,7 @@ You will not need to make use of any other std::thread API calls in this assignm
   Analysis Results:
 
   The graph below shows the speedup as a function of the threads number for view 1 and view 2 using the Spatial Decomposition. It can be seen that the curve for view 1 is not linear due to the drop occuring when using three thread. The argument  is that in view 1, most of the pixels woth heavy operations lie in middle of the image while the majority of the rest are black pixels. Since this sector of the image is mostly handled by the second thread, the other two finish earlier and wait for the remaining thread to join.   
-  ![Speedup graph](handout-images/speedup.jpg)
+  ![Speedup graph](handout-images/speedup_graph.jpg)
 
 4.  Modify the mapping of work to threads to achieve to improve speedup to
   at __about 7-8x on both views__ of the Mandelbrot set (if you're above 7x that's fine, don't sweat it). You may not use any
