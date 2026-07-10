@@ -4,6 +4,7 @@
 #include <math.h>
 #include "CS149intrin.h"
 #include "logger.h"
+#include <iostream>
 using namespace std;
 
 #define EXP_MAX 10
@@ -249,6 +250,66 @@ void clampedExpVector(float* values, int* exponents, float* output, int N) {
   // Your solution should work for any value of
   // N and VECTOR_WIDTH, not just when VECTOR_WIDTH divides N
   //
+  int batchesCount = N / VECTOR_WIDTH;
+  int remaining = N % VECTOR_WIDTH;
+
+  __cs149_vec_int zeros = _cs149_vset_int(0);
+  __cs149_vec_int ones = _cs149_vset_int(1);
+  __cs149_vec_float bound = _cs149_vset_float(9.999999f);
+  __cs149_vec_float input;
+  __cs149_vec_int exp;
+  __cs149_mask active_lanes = _cs149_init_ones(VECTOR_WIDTH);
+
+  for(int i = 0; i < N; i += VECTOR_WIDTH){
+    __cs149_vec_float out = _cs149_vset_float(1.0f);
+    // Copy VECTOR_WIDTH-sized batch 
+    _cs149_vload_float(input, (values+i), active_lanes);
+    _cs149_vload_int(exp, (exponents+i), active_lanes);
+    // Set values of elements with 0 exponents to 1 
+    __cs149_mask zero_exp;
+    _cs149_veq_int(zero_exp, exp, zeros, active_lanes);
+    //_cs149_vset_float(out, 1.0f, zero_exp);
+    // Remove the elements with 0 exponents from the active lanes
+    active_lanes = _cs149_mask_not(zero_exp);
+    //_cs149_vmove_float(out, input, active_lanes);
+
+    while(_cs149_cntbits(active_lanes)){
+      _cs149_vmult_float(out, out, input, active_lanes);
+      _cs149_vsub_int(exp, exp, ones, active_lanes);
+      _cs149_veq_int(zero_exp, exp, zeros, active_lanes);
+      active_lanes = _cs149_mask_not(zero_exp);
+    }
+    // Clamp values
+    active_lanes = _cs149_init_ones(VECTOR_WIDTH);
+    __cs149_mask calmping_lanes;
+    _cs149_vgt_float(calmping_lanes, out, bound, active_lanes);
+    _cs149_vmove_float(out, bound, calmping_lanes);
+    // store out to output
+    _cs149_vstore_float((output+i), out, active_lanes); 
+  }
+
+  if(remaining){
+    float remaining_arr[VECTOR_WIDTH];
+    int remaining_exp[VECTOR_WIDTH];
+    float remaining_out[VECTOR_WIDTH];
+    for(int i = 0; i < VECTOR_WIDTH; ++i){
+      if(i < remaining){
+        remaining_arr[i] = values[(batchesCount*VECTOR_WIDTH) + i];
+        remaining_exp[i] = exponents[(batchesCount*VECTOR_WIDTH) + i];
+      } else{
+        remaining_arr[i] = 0;
+        remaining_exp[i] = 1.0f;
+      }
+    }
+    clampedExpVector(remaining_arr, remaining_exp, remaining_out, VECTOR_WIDTH);
+    for(int i = 0; i < VECTOR_WIDTH; ++i){
+      output [(batchesCount*VECTOR_WIDTH) + i] = remaining_out[i];
+    }
+
+    // for(int i = 0; i < N; ++i){
+    //   std::cout << "out" << "[" << i << "]" << "=" << output [i]<< "\n";
+    // }
+  }
   
 }
 
