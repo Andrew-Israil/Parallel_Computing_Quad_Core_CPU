@@ -148,9 +148,6 @@ Does the vector utilization increase, decrease or stay the same as `VECTOR_WIDTH
 
 Results Analysis:
 
-
-
-| | | | | |
 | --- | --- | --- | --- | --- |
 | Vector Width : | 2 | 4 | 8 | 16 |
 | Total Vector Instructions : | 19928 | 11543 | 6333 | 3382 |
@@ -158,7 +155,7 @@ Results Analysis:
 | Utilized Vector Lanes : | 33952 | 36482 | 38286 | 40046 |
 | Total Vector Lanes : | 39856 | 46172 | 50664 | 54112 |
 
-
+The increase of vector width means the increase of the batch size at each iteration. As a result this reduces the total instructions executed to compute the values for the whole array. However, bigger vector width leads to a wide dynamic range of values for the exponents computed simultaneously. thus more inactive lanes for smaller exponents.
 
 ## Program 3: Parallel Fractal Generation Using ISPC (20 points) ##
 
