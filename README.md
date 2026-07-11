@@ -148,6 +148,7 @@ Does the vector utilization increase, decrease or stay the same as `VECTOR_WIDTH
 
 Results Analysis:
 
+| | | | | |
 | --- | --- | --- | --- | --- |
 | Vector Width : | 2 | 4 | 8 | 16 |
 | Total Vector Instructions : | 19928 | 11543 | 6333 | 3382 |
