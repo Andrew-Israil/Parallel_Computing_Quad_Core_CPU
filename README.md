@@ -1,6 +1,7 @@
 # Assignment 1: Performance Analysis on a Quad-Core CPU #
 
 ## Overview ##
+This repo is cloned from the Stanford CS149 Course repo, which is found [here](https://github.com/stanford-cs149/asst1).
 
 This assignment is intended to help you develop an understanding of the two primary forms of parallel execution present in a modern multi-core CPU:
 
@@ -144,6 +145,20 @@ should work with any combination of input array size (`N`) and vector width (`VE
 utilization. You can do this by changing the `#define VECTOR_WIDTH` value in `CS149intrin.h`. 
 Does the vector utilization increase, decrease or stay the same as `VECTOR_WIDTH` changes? Why?
 3.  _Extra credit: (1 point)_ Implement a vectorized version of `arraySumSerial` in `arraySumVector`. Your implementation may assume that `VECTOR_WIDTH` is a factor of the input array size `N`. Whereas the serial implementation runs in `O(N)` time, your implementation should aim for runtime of `(N / VECTOR_WIDTH + VECTOR_WIDTH)` or even `(N / VECTOR_WIDTH + log2(VECTOR_WIDTH))`  You may find the `hadd` and `interleave` operations useful.
+
+Results Analysis:
+
+
+
+| | | | | |
+| --- | --- | --- | --- | --- |
+| Vector Width : | | | 2 | 4 | 8 | 16 |
+| Total Vector Instructions : | | | 19928 | 11543 | 6333 | 3382 |
+| Vector Utilization : | | | 85.2% | 79.0% | 75.6% | 74.0% |
+| Utilized Vector Lanes : | | | 33952 | 36482 | 38286 | 40046 |
+| Total Vector Lanes : | | | 39856 | 46172 | 50664 | 54112 |
+
+
 
 ## Program 3: Parallel Fractal Generation Using ISPC (20 points) ##
 
