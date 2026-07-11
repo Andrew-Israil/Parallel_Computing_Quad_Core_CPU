@@ -152,11 +152,11 @@ Results Analysis:
 
 | | | | | |
 | --- | --- | --- | --- | --- |
-| Vector Width : | | | 2 | 4 | 8 | 16 |
-| Total Vector Instructions : | | | 19928 | 11543 | 6333 | 3382 |
-| Vector Utilization : | | | 85.2% | 79.0% | 75.6% | 74.0% |
-| Utilized Vector Lanes : | | | 33952 | 36482 | 38286 | 40046 |
-| Total Vector Lanes : | | | 39856 | 46172 | 50664 | 54112 |
+| Vector Width : | 2 | 4 | 8 | 16 |
+| Total Vector Instructions : | 19928 | 11543 | 6333 | 3382 |
+| Vector Utilization : | 85.2% | 79.0% | 75.6% | 74.0% |
+| Utilized Vector Lanes : | 33952 | 36482 | 38286 | 40046 |
+| Total Vector Lanes : | 39856 | 46172 | 50664 | 54112 |
 
 
 
