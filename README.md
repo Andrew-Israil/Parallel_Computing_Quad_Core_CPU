@@ -290,6 +290,10 @@ the foreach loop to yield a more straightforward implementation.
 
 If you look into detailed technical material about the CPUs in the myth machines, you will find there are a complicated set of rules about how many scalar and vector instructions can be run per clock.  For the purposes of this assignment, you can assume that there are about as many 8-wide vector execution units as there are scalar execution units for floating point math.   
 
+Analysis:
+
+Running this program on view 1 and view 2 results in 5.11x and 4.10x speedup respectively. Condiering 8-width SIMD instructions, the highest speedup would have been 8x, assuming similar work load accross all vector lanes, However, this not the case. Looking into both views, it can be seen that pixels with low computation and those with high computation can be gathered in the same chunk, which means high possibility of inactive lanes. This inbalance is more  significant in view 2.  
+
 ### Program 3, Part 2: ISPC Tasks (10 of 20 points) ###
 
 ISPCs SPMD execution model and mechanisms like `foreach` facilitate the creation
