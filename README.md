@@ -340,6 +340,12 @@ cores?
 _Answer_: Great question! And there are a lot of possible answers. Come to
 office hours.
 
+Improvement and Analysis:
+
+A 30x speedup was achieved by creating tasks equal to the  number of rows i.e each task is responsible for each row. According to Intel documentation, "one should launch many more tasks than there are processors in the system to ensure good load-balancing, but not so many that the overhead of scheduling and running tasks dominates the computation". Also, one of the implementation methods to execute tasks is The Queueing and Worker Thread Model. ISPC tasks do not map 1-to-1 with operating system threads. Instead, runtime backend (e.g., TBB) initializes a fixed pool of worker threads, usually matching the exact number of hardware threads (e.g., 4 threads for a quad-core CPU). So for quad-core CPU, when launch [1000] my_task() is called, ISPC drops 1,000 lightweight task structures into the backend's scheduling queue (Tasks Queue). The 4 hardware worker threads continuously pull tasks out of this queue, execute them one by one, and loop back for more until the queue is empty.
+
+Thus, adding each row as task in the queue, from which the worker threads pull their taks is much faster than statically assigning a group of rows to a thread, as in Problem 1. The idea is the static approach could lead to some threads with low compuation pixels finishing their work and waiting for other threads with heavy computation pixels. Therfore, the ISPC tasks keeps all worker threads busy, making a better use of hardware resources. 
+
 ## Program 4: Iterative `sqrt` (15 points) ##
 
 Program 4 is an ISPC program that computes the square root of 20 million
