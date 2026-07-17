@@ -386,6 +386,9 @@ Note: This problem is a review to double-check your understanding, as it covers 
 
 Analysis:
 
+Based on the results  from previous sections, in order to achieve the maximum speedup with SIMD is to avoid high number of masked lanes. Therefore, the maximum speedup can be achieved by making all values equal. However, when setting them all to 1 this didn't pay off, since value 1 converges very quickly which requires frequent memmory access or context switches for threads that are really slow. On the other hand thevalues 2.998f converges after much more iteration, reducing the effect of the overhead of memory access or context switches.
+
+To minimize the SIMD speedup, all values set to 1.0f while every 8th bit set to 2.998f. In this way for a 8-width vector, all the lanes are inactive and waiting for the 8th lane. 
 
 4.  _Extra Credit: (up to 2 points)_ Write your own version of the `sqrt` 
  function manually using AVX2 intrinsics. To get credit your 
