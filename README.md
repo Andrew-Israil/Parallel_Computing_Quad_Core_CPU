@@ -87,11 +87,11 @@ You will not need to make use of any other std::thread API calls in this assignm
   the beginning and end of `workerThreadStart()`. How do your measurements
   explain the speedup graph you previously created?
 
-  Analysis Results:
+  **Results Analysis:**
 
   ![Speedup graph](handout-images/speedup_graph.jpg)
 
-  The above below shows the speedup as a function of the threads number for view 1 and view 2 using the Spatial Decomposition. It can be seen that the curve for view 1 is not linear due to the drop occuring when using three thread. The argument  is that in view 1, most of the pixels woth heavy operations lie in middle of the image while the majority of the rest are black pixels. Since this sector of the image is mostly handled by the second thread, the other two finish earlier and wait for the remaining thread to join. This can be shown in the figure below.
+  The above graph shows the speedup as a function of the threads number for view 1 and view 2 using the Spatial Decomposition. It can be seen that the curve for view 1 is not linear due to the drop occuring when using three thread. The argument  is that in view 1, most of the pixels woth heavy operations lie in middle of the image while the majority of the rest are black pixels. Since this sector of the image is mostly handled by the second thread, the other two finish earlier and wait for the remaining thread to join. This can be shown in the figure below.
 
 ![three Threads Drop](handout-images/3_threads_drop.jpg)
 
@@ -103,12 +103,14 @@ You will not need to make use of any other std::thread API calls in this assignm
   among threads is necessary.). In your writeup, describe your approach to parallelization
   and report the final 8-thread speedup obtained. 
 
-  Solution:
+  **Solution:**
   Distribute the worklaod accross the image sectors over all threads by assigning every nth group of rows to a thread as shown the program. The size of the group at each thread iteration was determined experimentally, also the  total  number of rows assigned to a thread must be divisible by the group size. This approach results in 7.1 for view 1 and 6.89 for view 2.
 
 5. Now run your improved code with 16 threads. Is performance noticably greater than when running with eight threads? Why or why not? 
 
-Answer: This had no effect on improving the performance since the CPU can only run 8 threads concurrently, thus the remainig 8 are schedueled later by the OS and dispatched through context switch which takes thousands of clock cycles.
+**Answer:** 
+
+This had no effect on improving the performance since the CPU can only run 8 threads concurrently, thus the remainig 8 are schedueled later by the OS and dispatched through context switch which takes thousands of clock cycles.
   
 ## Program 2: Vectorizing Code Using SIMD Intrinsics (20 points) ##
 
@@ -146,11 +148,10 @@ utilization. You can do this by changing the `#define VECTOR_WIDTH` value in `CS
 Does the vector utilization increase, decrease or stay the same as `VECTOR_WIDTH` changes? Why?
 3.  _Extra credit: (1 point)_ Implement a vectorized version of `arraySumSerial` in `arraySumVector`. Your implementation may assume that `VECTOR_WIDTH` is a factor of the input array size `N`. Whereas the serial implementation runs in `O(N)` time, your implementation should aim for runtime of `(N / VECTOR_WIDTH + VECTOR_WIDTH)` or even `(N / VECTOR_WIDTH + log2(VECTOR_WIDTH))`  You may find the `hadd` and `interleave` operations useful.
 
-Results Analysis:
+**Results Analysis:**
 
-| | | | | |
+| Vector Width :  | 2 | 4 | 8 | 16 |
 | --- | --- | --- | --- | --- |
-| Vector Width : | 2 | 4 | 8 | 16 |
 | Total Vector Instructions : | 19928 | 11543 | 6333 | 3382 |
 | Vector Utilization : | 85.2% | 79.0% | 75.6% | 74.0% |
 | Utilized Vector Lanes : | 33952 | 36482 | 38286 | 40046 |
@@ -290,7 +291,7 @@ the foreach loop to yield a more straightforward implementation.
 
 If you look into detailed technical material about the CPUs in the myth machines, you will find there are a complicated set of rules about how many scalar and vector instructions can be run per clock.  For the purposes of this assignment, you can assume that there are about as many 8-wide vector execution units as there are scalar execution units for floating point math.   
 
-Analysis:
+**Results Analysis:**
 
 Running this program on view 1 and view 2 results in 5.11x and 4.10x speedup respectively. Condiering 8-width SIMD instructions, the highest speedup would have been 8x, assuming similar work load accross all vector lanes, However, this not the case. Looking into both views, it can be seen that pixels with low computation and those with high computation can be gathered in the same chunk, which means high possibility of inactive lanes. This inbalance is more  significant in view 2.  
 
@@ -340,7 +341,7 @@ cores?
 _Answer_: Great question! And there are a lot of possible answers. Come to
 office hours.
 
-Improvement and Analysis:
+**Improvement and Analysis:**
 
 A 30x speedup was achieved by creating tasks equal to the  number of rows i.e each task is responsible for each row. According to Intel documentation, "one should launch many more tasks than there are processors in the system to ensure good load-balancing, but not so many that the overhead of scheduling and running tasks dominates the computation". Also, one of the implementation methods to execute tasks is The Queueing and Worker Thread Model. ISPC tasks do not map 1-to-1 with operating system threads. Instead, runtime backend (e.g., TBB) initializes a fixed pool of worker threads, usually matching the exact number of hardware threads (e.g., 4 threads for a quad-core CPU). So for quad-core CPU, when launch [1000] my_task() is called, ISPC drops 1,000 lightweight task structures into the backend's scheduling queue (Tasks Queue). The 4 hardware worker threads continuously pull tasks out of this queue, execute them one by one, and loop back for more until the queue is empty.
 
@@ -368,7 +369,7 @@ Note: This problem is a review to double-check your understanding, as it covers 
   is the speedup due to SIMD parallelization? What is the speedup due to 
   multi-core parallelization?
 
-  Answer: The program achieved 4.42x speedup from ISPC and 29.09x speedup from task ISPC 
+ **Answer:** The program achieved 4.42x speedup from ISPC and 29.09x speedup from task ISPC 
 
 2.  Modify the contents of the array values to improve the relative speedup 
   of the ISPC implementations. Construct a specifc input that __maximizes speedup over the sequential version of the code__ and report the resulting speedup achieved (for both the with- and without-tasks ISPC implementations). Does your modification improve SIMD speedup?
@@ -376,7 +377,7 @@ Note: This problem is a review to double-check your understanding, as it covers 
 3.  Construct a specific input for `sqrt` that __minimizes speedup for ISPC (without-tasks) over the sequential version of the code__. Describe this input, describe why you chose it, and report the resulting relative performance of the ISPC implementations. What is the reason for the loss in efficiency? 
     __(keep in mind we are using the `--target=avx2` option for ISPC, which generates 8-wide SIMD instructions)__. 
 
-  Results:
+**Results:**
 
 |  | SIMD Speedup | SIMD + Tasks Speedup |
 | --- | --- | --- |
@@ -384,7 +385,7 @@ Note: This problem is a review to double-check your understanding, as it covers 
 | All values set to 1.0f : | 2.43 | 2.51 |
 | All values set to 1.0f while every 8th bit set to 2.998f  : | 0.88 | 5.41 |
 
-Analysis:
+**Analysis:**
 
 Based on the results  from previous sections, in order to achieve the maximum speedup with SIMD is to avoid high number of masked lanes. Therefore, the maximum speedup can be achieved by making all values equal. However, when setting them all to 1 this didn't pay off, since value 1 converges very quickly which requires frequent memmory access or context switches for threads that are really slow. On the other hand thevalues 2.998f converges after much more iteration, reducing the effect of the overhead of memory access or context switches.
 
@@ -411,7 +412,24 @@ elements used. `saxpy` is a *trivially parallelizable computation* and features 
   ISPC (without tasks) and ISPC (with tasks) implementations of saxpy. What 
   speedup from using ISPC with tasks do you observe? Explain the performance of this program.
   Do you think it can be substantially improved? (For example, could you rewrite the code to achieve near linear speedup? Yes or No? Please justify your answer.)
+
+  **Results:**
+
+|  | Time |  Memory Bandwidth | Operations Rate |
+| --- | --- | --- | -- |
+| SIMD : | 14.815 | 20.116 | 2.7 |
+| SIMD + Tasks : | 15.302 | 19.476 | 2.614 |
+
+**Anlysis:**
+
+The mathematical equation for SAXPY requires minimal computation: one multiplication and one addition per element. However, it requires a massive amount of data movement, which is limited by the memory bandwidth. A single CPU core using an 8-width SIMD vector (like 256-bit AVX2) is already capable of reading and writing data fast enough to completely saturate the CPU’s memory controller. Adding more threads or tasks cannot make the physical RAM transfer data any faster. The memory bus is already at 100% capacity.
+
 2. __Extra Credit:__ (1 point) Note that the total memory bandwidth consumed computation in `main.cpp` is `TOTAL_BYTES = 4 * N * sizeof(float);`.  Even though `saxpy` loads one element from X, one element from Y, and writes one element to `result` the multiplier by 4 is correct.  Why is this the case? (Hint, think about how CPU caches work.)
+
+**Answer:**
+
+Under write-allocate policy when the CPU reaches the instruction to write the answer into `result[i]` it checks if the cache line for that specific `result[i]` address is already loaded. Since result is a brand-new array being written to for the first time, it is a cache miss. So it loads the cache line from the RAM and modifies the value inside the cache. As the loop progresses to higher indices, that cache line is marked as "dirty" (modified) and is eventually evicted, forcing a Write back to system RAM. Therefore, the write to memory is split into two operations: load in cache and write back or through (depending on the policy).
+
 3. __Extra Credit:__ (points handled on a case-by-case basis) Improve the performance of `saxpy`.
   We're looking for a significant speedup here, not just a few percentage 
   points. If successful, describe how you did it and what a best-possible implementation on these systems might achieve. Also, if successful, come tell the staff, we'll be interested. ;-)
