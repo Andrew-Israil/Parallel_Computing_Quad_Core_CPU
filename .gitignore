@@ -12,3 +12,5 @@ prog5_saxpy/objs
 prog6_kmeans/kmeans
 prog6_kmeans/objs
 prog6_kmeans/data.dat
+prog6_kmeans/end.log
+prog6_kmeans/start.log

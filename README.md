@@ -466,24 +466,24 @@ Tips / Notes:
 
 First, time for each step in the algorithm was measured and showed in the table below. It can be seen that `computeAssignments` takes 65.8% of the total time followed by `computeCost` which takes 22.8% of the total time. Both functions loop over the points of 100th diemesion and calculate distance to centroids. The difference is that `computeAssignments` calculates  distance to all centroids, unlike `computeCost` which does only once based on the assigned centroid.
 
-[Total computeAssignments Time]: 8040.447 ms
-[Total computeCentroids Time]: 1444.968 ms
-[Total computeCost Time]: 2724.581 ms
-[Total Time]: 12211.045 ms
+[Total computeAssignments Time]: 8040.447 ms  
+[Total computeCentroids Time]: 1444.968 ms  
+[Total computeCost Time]: 2724.581 ms  
+[Total Time]: 12211.045 ms  
 
 Therefore, `computeAssignments` was parallelized first using 8 threads, which is the optimumm threads number as shown in Program 1. This led to a 2.1x speedup, as shown below. 
 
-[Total computeAssignments Time]: 1488.721 ms
-[Total computeCentroids Time]: 1549.932 ms
-[Total computeCost Time]: 2782.063 ms
-[Total Time]: 5821.917 ms
+[Total computeAssignments Time]: 1488.721 ms  
+[Total computeCentroids Time]: 1549.932 ms  
+[Total computeCost Time]: 2782.063 ms  
+[Total Time]: 5821.917 ms  
 
 Last step for performance optimization was to use SIMD operation to parallelize `dist` function since it is used by both functions. The result is 3.1x speedup.
 
-[Total computeAssignments Time]: 990.544 ms
-[Total computeCentroids Time]: 1436.415 ms
-[Total computeCost Time]: 1382.719 ms
-[Total Time]: 3809.715 ms
+[Total computeAssignments Time]: 990.544 ms  
+[Total computeCentroids Time]: 1436.415 ms  
+[Total computeCost Time]: 1382.719 ms  
+[Total Time]: 3809.715 ms  
 
 
 
