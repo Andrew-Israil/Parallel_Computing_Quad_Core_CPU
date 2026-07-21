@@ -1,0 +1,14 @@
+prog1_mandelbrot_threads/objs
+prog1_mandelbrot_threads/mandelbrot.exe
+prog2_vecintrin/CS149intrin.o
+prog2_vecintrin/logger.o
+prog2_vecintrin/myexp.exe
+prog3_mandelbrot_ispc/objs
+prog3_mandelbrot_ispc/mandelbrot_ispc
+prog4_sqrt/sqrt
+prog4_sqrt/objs
+prog5_saxpy/saxpy
+prog5_saxpy/objs
+prog6_kmeans/kmeans
+prog6_kmeans/objs
+prog6_kmeans/data.dat

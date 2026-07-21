@@ -462,6 +462,31 @@ Tips / Notes:
 - Try to prioritize code improvements with the potential for high returns and think about the different axes of parallelism available in the problem and how you may take advantage of them.
 - **The objective of this program is to give you more practice with learning how to profile and debug performance oriented programs. Even if you don't hit the performance target, if you demonstrate good/thoughtful debugging skills in the writeup you'll still get most of the points.**
 
+**Solution:**
+
+First, time for each step in the algorithm was measured and showed in the table below. It can be seen that `computeAssignments` takes 65.8% of the total time followed by `computeCost` which takes 22.8% of the total time. Both functions loop over the points of 100th diemesion and calculate distance to centroids. The difference is that `computeAssignments` calculates  distance to all centroids, unlike `computeCost` which does only once based on the assigned centroid.
+
+[Total computeAssignments Time]: 8040.447 ms
+[Total computeCentroids Time]: 1444.968 ms
+[Total computeCost Time]: 2724.581 ms
+[Total Time]: 12211.045 ms
+
+Therefore, `computeAssignments` was parallelized first using 8 threads, which is the optimumm threads number as shown in Program 1. This led to a 2.1x speedup, as shown below. 
+
+[Total computeAssignments Time]: 1488.721 ms
+[Total computeCentroids Time]: 1549.932 ms
+[Total computeCost Time]: 2782.063 ms
+[Total Time]: 5821.917 ms
+
+Last step for performance optimization was to use SIMD operation to parallelize `dist` function since it is used by both functions. The result is 3.1x speedup.
+
+[Total computeAssignments Time]: 990.544 ms
+[Total computeCentroids Time]: 1436.415 ms
+[Total computeCost Time]: 1382.719 ms
+[Total Time]: 3809.715 ms
+
+
+
 ## What About ARM-Based Macs? ##
 
 For those with access to a new Apple ARM-based laptop, check out the handout [here](README_aarch64.md). Produce a report of performance of the various programs on a new Apple ARM-based laptop. The staff is curious about what you will find.  What speedups are you observing from SIMD execution? Those without access to a modern Macbook could try to use ARM-based servers that are available on a cloud provider like AWS, although it has not been tested by the staff. Please do not submit any code from running on ARM based machines to Gradescope.  
