@@ -1,7 +1,7 @@
 # Assignment 1: Performance Analysis on a Quad-Core CPU #
 
 ## Overview ##
-This repo is cloned from the Stanford CS149 Course repo, which is found [here](https://github.com/stanford-cs149/asst1).
+This repo is cloned from the Stanford CS149 Course repo, which is found [here](https://github.com/stanford-cs149/asst1). This represents my solution to the assignment.
 
 This assignment is intended to help you develop an understanding of the two primary forms of parallel execution present in a modern multi-core CPU:
 
